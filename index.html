@@ -1,13 +1,193 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>alaaeta — هيا بنا</title>
+
+    <style>
+        /* ---- Tokens ------------------------------------------------ */
+        :root {
+            /* spacing scale */
+            --space-1: 4px;
+            --space-2: 8px;
+            --space-3: 12px;
+            --space-4: 16px;
+            --space-6: 24px;
+            --space-8: 32px;
+            --space-12: 48px;
+
+            /* type scale — line height moves inversely with size,
+               with extra leading for Arabic */
+            --text-sm: 0.875rem;   --leading-sm: 1.7;
+            --text-base: 1.0625rem; --leading-base: 1.8;
+            --text-display: clamp(2rem, 6vw, 3rem); --leading-display: 1.25;
+
+            /* semantic colors — light */
+            --bg: #f7f6f3;
+            --surface: #ffffff;
+            --text: #1a1a19;
+            --text-muted: #63615c;
+            --border: #e4e1db;
+            --accent: #0f766e;
+            --accent-hover: #0b5d57;
+            --accent-active: #084842;
+            --on-accent: #ffffff;
+            --focus: #0f766e;
+
+            /* radius + shadow — two options each, no more */
+            --radius-md: 10px;
+            --radius-lg: 18px;
+            --shadow-sm: 0 1px 2px rgb(20 18 14 / 0.06);
+            --shadow-md: 0 8px 28px -12px rgb(20 18 14 / 0.18);
+
+            --font: "SF Arabic", "Geeza Pro", "Segoe UI", "Noto Sans Arabic",
+                    Tahoma, system-ui, -apple-system, sans-serif;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #131417;
+                --surface: #1b1d22;
+                --text: #eceae5;
+                --text-muted: #a3a09a;
+                --border: #2c2f36;
+                --accent: #14b8a6;
+                --accent-hover: #2dd4bf;
+                --accent-active: #5eead4;
+                --on-accent: #08312d;
+                --focus: #2dd4bf;
+                --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+                --shadow-md: 0 8px 28px -12px rgb(0 0 0 / 0.6);
+            }
+        }
+
+        /* ---- Base -------------------------------------------------- */
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100dvh;
+            display: grid;
+            place-items: center;
+            padding: var(--space-6);
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font);
+            font-size: var(--text-base);
+            line-height: var(--leading-base);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ---- Card -------------------------------------------------- */
+        .card {
+            width: 100%;
+            max-width: 34rem;          /* ~65–75 characters */
+            padding: var(--space-12) var(--space-8);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            text-align: center;
+        }
+
+        /* Latin brand name stays LTR inside the RTL document */
+        .brand {
+            direction: ltr;
+            unicode-bidi: isolate;
+            display: inline-block;
+            margin: 0 0 var(--space-3);
+            font-size: var(--text-sm);
+            line-height: var(--leading-sm);
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .title {
+            margin: 0 0 var(--space-4);
+            font-size: var(--text-display);
+            line-height: var(--leading-display);
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        .subtitle {
+            margin: 0 auto var(--space-8);
+            max-width: 26rem;
+            color: var(--text-muted);
+        }
+
+        /* ---- Button ------------------------------------------------ */
+        .btn {
+            /* logical properties only — mirrors correctly in LTR */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+            min-height: 48px;           /* ≥44px touch target */
+            padding-inline: var(--space-8);
+            padding-block: var(--space-3);
+            border: 0;
+            border-radius: var(--radius-md);
+            background: var(--accent);
+            color: var(--on-accent);
+            font: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+            transition: background-color 140ms ease, transform 140ms ease;
+        }
+
+        .btn:hover   { background: var(--accent-hover); }
+        .btn:active  { background: var(--accent-active); transform: translateY(1px); }
+
+        .btn:focus-visible {
+            outline: 3px solid var(--focus);
+            outline-offset: 3px;
+        }
+
+        .btn[disabled] {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* directional glyph: flips with the document direction */
+        .btn .arrow {
+            transition: transform 140ms ease;
+        }
+        .btn:hover .arrow { transform: translateX(3px); }
+        html[dir="rtl"] .btn:hover .arrow { transform: translateX(-3px); }
+
+        @media (prefers-reduced-motion: reduce) {
+            .btn, .btn .arrow { transition: none; }
+            .btn:active { transform: none; }
+            .btn:hover .arrow,
+            html[dir="rtl"] .btn:hover .arrow { transform: none; }
+        }
+
+        @media (max-width: 420px) {
+            .card { padding: var(--space-8) var(--space-6); }
+            .btn  { width: 100%; }
+        }
+    </style>
 </head>
 <body>
-alaaeta
+    <main class="card">
+        <p class="brand">alaaeta</p>
 
-<button>هيا بنا1111</button>
-Let's start
+        <h1 class="title">لنبدأ</h1>
+
+        <p class="subtitle">
+            صفحة بسيطة للبداية — كل شيء جاهز، اضغط الزر للانطلاق.
+        </p>
+
+        <button type="button" class="btn">
+            هيا بنا
+            <span class="arrow" aria-hidden="true">←</span>
+        </button>
+    </main>
 </body>
 </html>
